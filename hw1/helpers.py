@@ -1,7 +1,9 @@
 import pandas as pd
-from transformers import BertForSequenceClassification, AdamW, BertConfig
+from transformers import BertForSequenceClassification, BertConfig
 from torch.utils.data import TensorDataset, random_split
 from transformers import BertTokenizer
+from torch.optim import AdamW
+
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
 import sys
 import numpy as np
