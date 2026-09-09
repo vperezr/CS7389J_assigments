@@ -14,7 +14,6 @@ import datetime
 import pandas as pd
 import torch
 from transformers import BertTokenizer
-from helpers import flat_accuracy
 
 
 def tokenize_and_format(sentences):
