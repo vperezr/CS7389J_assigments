@@ -16,43 +16,26 @@ import torch
 from transformers import BertTokenizer
 from helpers import flat_accuracy
 
-# Redefine tokenize_and_format to fix the error related to BertTokenizer.encode_plus
-def tokenize_and_format(sentences):
-    # Load the BERT tokenizer.
-    print('Loading BERT tokenizer...')
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
 
+def tokenize_and_format(sentences):
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
     input_ids = []
     attention_masks = []
-
-    # For every sentence...
     for sent in sentences:
-        # `tokenizer` will:
-        #   (1) Tokenize the sentence.
-        #   (2) Prepend the `[CLS]` token to the start.
-        #   (3) Append the `[SEP]` token to the end.
-        #   (4) Map tokens to their IDs.
-        #   (5) Pad or truncate the sentence to `max_length`
-        #   (6) Create attention masks for [PAD] tokens.
         encoded_dict = tokenizer(
                             sent,                      # Sentence to encode.
                             add_special_tokens = True, # Add '[CLS]' and '[SEP]'
                             max_length = 64,           # Pad & truncate all sentences.
-                            padding = 'max_length',    # Explicitly use padding parameter
-                            truncation = True,         # Explicitly use truncation parameter
+                            padding = 'max_length',    # Use padding='max_length'
+                            truncation = True,         # Explicitly set truncation
                             return_attention_mask = True,   # Construct attn. masks.
-                            return_tensors = 'pt',     # Return PyTorch tensors.
+                            return_tensors = 'pt',     # Return pytorch tensors.
                        )
-
-        # Add the encoded sentence to the list.
         input_ids.append(encoded_dict['input_ids'])
         attention_masks.append(encoded_dict['attention_mask'])
     return input_ids, attention_masks
 
-
-
-
 def flat_accuracy(preds, labels):
-    pred_flat = np.argmax(preds, axis=1).flatten()
+    pred_flat = torch.argmax(preds, axis=1).flatten()
     labels_flat = labels.flatten()
-    return np.sum(pred_flat == labels_flat) / len(labels_flat)
+    return torch.sum(pred_flat == labels_flat)
