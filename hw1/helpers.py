@@ -11,6 +11,12 @@ import numpy as np
 import time
 import datetime
 
+import pandas as pd
+import torch
+from transformers import BertTokenizer
+from helpers import flat_accuracy
+
+# Redefine tokenize_and_format to fix the error related to BertTokenizer.encode_plus
 def tokenize_and_format(sentences):
     # Load the BERT tokenizer.
     print('Loading BERT tokenizer...')
@@ -42,6 +48,9 @@ def tokenize_and_format(sentences):
         input_ids.append(encoded_dict['input_ids'])
         attention_masks.append(encoded_dict['attention_mask'])
     return input_ids, attention_masks
+
+
+
 
 def flat_accuracy(preds, labels):
     pred_flat = np.argmax(preds, axis=1).flatten()
